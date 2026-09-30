@@ -1,19 +1,19 @@
 # AI Content Operations Pipeline
 
-This clean-room prototype turns one long-form content source into coordinated audience resources, publishing support, and structured library metadata. It demonstrates content operations and knowledge architecture: the workflow tracks where information came from, gives each output a clear purpose, keeps content identity stable, and surfaces uncertainty for a person to resolve.
+This clean-room prototype demonstrates a content operations architecture for turning podcast episodes, blogs, teachings, classes, workshops, coaching topics, and guides into coordinated human-facing resources and machine-readable metadata. The workflow tracks source priority, gives each output a distinct purpose, keeps content identity stable, and surfaces uncertainty for a person to resolve.
 
 The workflow began as a natural-language operating procedure. This prototype translates its operating ideas into explicit code and testable output contracts. It was derived from a real content-production operating system used to turn long-form source material into audience resources, publishing assets, and structured library metadata. The public edition uses synthetic content and a clean-room implementation.
 
 ## The operational problem
 
-A single source item often needs several different outputs. Treating that work as “ask a model to write five things” can blur the difference between source facts, editorial interpretation, publishing tasks, and data needed by a future content library. This pipeline models those jobs separately while keeping them connected through a stable `content_id`.
+A single source item often needs several different outputs. Treating that work as “ask a model to write five things” can blur the difference between source facts, editorial interpretation, immediate publishing tasks, and data needed by a future content library. This pipeline models those jobs separately while keeping them connected through a stable `content_id`.
 
 ## How the workflow works
 
-1. Read a primary source and supporting notes.
+1. Read a primary source and supporting notes for a supported content type.
 2. Normalize identity, source type, dates, and known URLs.
 3. Apply deterministic taxonomy rules and propose related items from a synthetic reference library.
-4. Generate a short public companion, a deeper educational guide, a publishing sheet, and a future-library note.
+4. Generate the package: a short public companion, a deeper guided resource, a publishing sheet, a future-optimization/library-data sheet, and `metadata.json`.
 5. Produce one JSON metadata record and validate its schema, controlled vocabulary, identifiers, dates, relationships, and uncertainty flags.
 6. Leave unresolved decisions visible for human review.
 
@@ -48,14 +48,14 @@ See [the architecture notes](docs/architecture.md) for the boundaries between pi
 
 ### Source hierarchy
 
-The primary transcript or source content controls factual details such as what practice was actually described. Supporting notes can fill gaps but do not override conflicting primary-source facts. Templates define output shape; metadata rules define structure; the reference library suggests links and avoids unnecessary duplication. Missing information stays missing.
+The confirmed production priority is: (1) transcript or primary source, (2) show notes or outline, (3) template, (4) metadata standard, (5) reference library, (6) project instructions, and (7) assistant or implementation judgment. The primary source controls factual details such as which exercises or practices were actually described. Supporting notes can fill gaps but do not override conflicting primary-source facts. Templates define output shape; metadata rules define structure; the reference library supports useful links and helps avoid unnecessary duplication. Missing information stays missing.
 
 ### Purpose-specific output contracts
 
 - **Public companion:** a brief reflection or practical interaction with the source, not a summary.
-- **Deep guide:** orientation, reflection, teaching, pattern mapping, practice, and integration. It is educational and non-clinical.
-- **Publishing sheet:** copy-ready material, title and SEO suggestions, a suggested slug, and clear placeholders for unconfirmed links.
-- **Future-library note:** concise topic, fit, tags, relationships, and a possible future search or recommendation use.
+- **Deep guide:** a Sanctuary-style guided resource with orientation, reflection, teaching, pattern mapping, practice, and integration. The public demo uses a generic educational layout without production artwork; it is non-clinical.
+- **Publishing sheet:** the low-friction, immediate human publishing workflow: copy-ready material, title and SEO suggestions, a suggested slug, and clear placeholders for unconfirmed links.
+- **Future-optimization sheet:** a separate long-term library layer for topics, pathways, tags, relationships, search, recommendations, and possible app use. It is kept concise so weekly publishing does not become heavy data entry.
 
 ### Stable identity and metadata
 
@@ -64,6 +64,12 @@ The `content_id` is lowercase, underscore-separated, and independent from the pu
 Controlled fields such as pathway, modality, depth, and practice type use small vocabularies so software can filter them consistently. Dynamic tags preserve nuanced listener language such as “peace feels unfamiliar.” These layers are separate by design.
 
 Related-content links store stable IDs, never display titles. The synthetic library is used to suggest relevant items and provide examples for cross-linking; a human still decides whether a suggestion belongs.
+
+The Metadata Standard defines the structured machine-readable authority. For an individual item, standalone `metadata.json` is the preferred machine-readable record and requires a `schema_version`; human-readable metadata copies may also appear in generated documents. A production operational registry should track workflow state and status, rather than duplicate the complete metadata model. Future migrations should preserve finalized content IDs and reviewed corrections. This public prototype demonstrates the standalone metadata record and ID stability; it does not implement a registry or migration process.
+
+### Production design and public implementation
+
+The architecture above reflects the confirmed production design. The clean-room implementation is narrower: its runnable example processes one fictional podcast source, uses a small synthetic reference library, and deterministically writes Markdown documents plus one JSON record. The public demo is evidence of selected workflow contracts, not a copy of the production system, its source documents, code, templates, or publishing infrastructure.
 
 ### Uncertainty and review
 
