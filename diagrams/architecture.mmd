@@ -1,0 +1,22 @@
+flowchart TD
+    A[Primary source: transcript] --> B[Normalization]
+    N[Supporting notes] --> B
+    B --> C[Stable content ID]
+    C --> D[Interpretation and taxonomy]
+    R[Synthetic reference library] --> E[Related-content suggestions]
+    D --> E
+    E --> F[Public companion]
+    E --> G[Deep guide]
+    E --> H[Publishing sheet]
+    E --> I[Future-library note]
+    D --> J[Structured metadata]
+    E --> J
+    F --> V[Validation]
+    G --> V
+    H --> V
+    I --> V
+    J --> V
+    V -->|Pass| P[Ready for human review]
+    V -->|Error or uncertainty| Q[Review flags]
+    Q --> P
+    P --> S[Future search and recommendation]

@@ -1,0 +1,5 @@
+METADATA VALIDATION
+PASS
+Warnings:
+- published_date is blank because publication has not been confirmed
+No errors.

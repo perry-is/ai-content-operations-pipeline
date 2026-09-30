@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "content_id": "podcast_s01e001_learning_to_rest",
+  "canonical_title": "Learning to Rest After a Demanding Season",
+  "working_title": "When Quiet Feels Unfamiliar",
+  "source_type": "podcast_episode",
+  "content_status": "ready_for_review",
+  "created_date": "2025-04-12",
+  "published_date": null,
+  "hosts": [
+    "Rowan Vale"
+  ],
+  "guests": [],
+  "urls": {
+    "website_page": "https://example.com/library/learning-to-rest",
+    "spotify": "",
+    "youtube": "",
+    "blog": ""
+  },
+  "assets": {
+    "content_folder": "",
+    "combined_source": "",
+    "public_companion": "",
+    "deep_guide": "",
+    "publishing_sheet": "",
+    "future_optimization_sheet": ""
+  },
+  "taxonomy": {
+    "primary_pathway": "nervous_system",
+    "secondary_pathways": [
+      "self_trust"
+    ],
+    "primary_modality": "journaling",
+    "secondary_modalities": [
+      "needs_review"
+    ],
+    "depth_level": "gentle",
+    "practice_types": [
+      "reflection",
+      "journaling",
+      "integration_plan"
+    ]
+  },
+  "tags": {
+    "theme_tags": [
+      "rest after stress",
+      "permission to pause",
+      "small transitions"
+    ],
+    "emotional_tags": [
+      "rest feels unfamiliar",
+      "pressure to stay productive"
+    ],
+    "dynamic_search_tags": [
+      "I feel guilty when I stop",
+      "peace feels unfamiliar"
+    ]
+  },
+  "related_content": {
+    "related_episodes": [
+      "podcast_making_room"
+    ],
+    "related_blogs": [
+      "blog_small_transitions"
+    ],
+    "related_guides": [
+      "guide_noticing_pressure"
+    ],
+    "next_best_content": []
+  },
+  "review": {
+    "needs_review": true,
+    "review_reason": "The source supports reflection and journaling; whether a somatic modality is central is unclear.",
+    "confidence_score": 0.62
+  }
+}
