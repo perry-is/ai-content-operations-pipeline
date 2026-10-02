@@ -10,7 +10,7 @@
 
 I co-host a podcast and teach workshops. Every episode should become several things: a short companion piece for listeners, a deeper guided resource, copy-ready publishing material, and data that a future searchable library can use.
 
-Doing that by hand every week was the bottleneck. Asking an AI to "write five things about this episode" created a different problem: it confidently adds exercises that were never in the episode, invents links, and mixes up what was *said* with what it *thinks*.
+Doing that repeatedly by hand became a bottleneck. Asking an AI to "write five things about this episode" created a different problem: it confidently adds exercises that were never in the episode, invents links, and mixes up what was *said* with what it *thinks*.
 
 So I wrote an operating procedure for the AI to follow, and this repository turns that procedure into code with checks.
 
