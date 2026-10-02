@@ -1,108 +1,31 @@
 # AI Content Operations Pipeline
 
-This clean-room prototype demonstrates a content operations architecture for turning podcast episodes, blogs, teachings, classes, workshops, coaching topics, and guides into coordinated human-facing resources and machine-readable metadata. The workflow tracks source priority, gives each output a distinct purpose, keeps content identity stable, and surfaces uncertainty for a person to resolve.
+**One recording in, a complete publishing package out, with rules that keep AI from making things up.**
 
-The workflow began as a natural-language operating procedure. This prototype translates its operating ideas into explicit code and testable output contracts. It was derived from a real content-production operating system used to turn long-form source material into audience resources, publishing assets, and structured library metadata. The public edition uses synthetic content and a clean-room implementation.
+`Status: modeled on the content system I use for my own podcast and workshops · synthetic data · Python · 18 tests`
 
-## The operational problem
+---
 
-A single source item often needs several different outputs. Treating that work as “ask a model to write five things” can blur the difference between source facts, editorial interpretation, immediate publishing tasks, and data needed by a future content library. This pipeline models those jobs separately while keeping them connected through a stable `content_id`.
+## The problem
 
-## How the workflow works
+I co-host a podcast and teach workshops. Every episode should become several things: a short companion piece for listeners, a deeper guided resource, copy-ready publishing material, and data that a future searchable library can use.
 
-1. Read a primary source and supporting notes for a supported content type.
-2. Normalize identity, source type, dates, and known URLs.
-3. Apply deterministic taxonomy rules and propose related items from a synthetic reference library.
-4. Generate the package: a short public companion, a deeper guided resource, a publishing sheet, a future-optimization/library-data sheet, and `metadata.json`.
-5. Produce one JSON metadata record and validate its schema, controlled vocabulary, identifiers, dates, relationships, and uncertainty flags.
-6. Leave unresolved decisions visible for human review.
+Doing that by hand every week was the bottleneck. Asking an AI to "write five things about this episode" created a different problem: it confidently adds exercises that were never in the episode, invents links, and mixes up what was *said* with what it *thinks*.
 
-```mermaid
-flowchart TD
-    A[Primary source: transcript] --> B[Source normalization]
-    N[Supporting notes] --> B
-    B --> C[Stable content identity]
-    C --> D[Interpretation and controlled taxonomy]
-    R[Synthetic reference library] --> E[Related-content selection]
-    D --> E
-    E --> F[Public companion]
-    E --> G[Deep guide]
-    E --> H[Publishing sheet]
-    E --> I[Future-library note]
-    D --> J[Structured metadata]
-    E --> J
-    F --> K[Validation]
-    G --> K
-    H --> K
-    I --> K
-    J --> K
-    K -->|consistent| L[Ready for human review]
-    K -->|uncertain or invalid| M[Review flags and useful errors]
-    M --> L
-    L --> Q[Future search and recommendation layer]
-```
+So I wrote an operating procedure for the AI to follow, and this repository turns that procedure into code with checks.
 
-See [the architecture notes](docs/architecture.md) for the boundaries between pipeline stages.
+## What comes out
 
-## System design
+From one fictional episode transcript and some show notes, the pipeline produces six files ([see them all](generated_example/)):
 
-### Source hierarchy
-
-The confirmed production priority is: (1) transcript or primary source, (2) show notes or outline, (3) template, (4) metadata standard, (5) reference library, (6) project instructions, and (7) assistant or implementation judgment. The primary source controls factual details such as which exercises or practices were actually described. Supporting notes can fill gaps but do not override conflicting primary-source facts. Templates define output shape; metadata rules define structure; the reference library supports useful links and helps avoid unnecessary duplication. Missing information stays missing.
-
-### Purpose-specific output contracts
-
-- **Public companion:** a brief reflection or practical interaction with the source, not a summary.
-- **Deep guide:** a Sanctuary-style guided resource with orientation, reflection, teaching, pattern mapping, practice, and integration. The public demo uses a generic educational layout without production artwork; it is non-clinical.
-- **Publishing sheet:** the low-friction, immediate human publishing workflow: copy-ready material, title and SEO suggestions, a suggested slug, and clear placeholders for unconfirmed links.
-- **Future-optimization sheet:** a separate long-term library layer for topics, pathways, tags, relationships, search, recommendations, and possible app use. It is kept concise so weekly publishing does not become heavy data entry.
-
-### Stable identity and metadata
-
-The `content_id` is lowercase, underscore-separated, and independent from the public title or URL. A draft ID is visibly temporary. A finalized ID cannot be silently changed. All generated layers use the same identity.
-
-Controlled fields such as pathway, modality, depth, and practice type use small vocabularies so software can filter them consistently. Dynamic tags preserve nuanced listener language such as “peace feels unfamiliar.” These layers are separate by design.
-
-Related-content links store stable IDs, never display titles. The synthetic library is used to suggest relevant items and provide examples for cross-linking; a human still decides whether a suggestion belongs.
-
-The Metadata Standard defines the structured machine-readable authority. For an individual item, standalone `metadata.json` is the preferred machine-readable record and requires a `schema_version`; human-readable metadata copies may also appear in generated documents. A production operational registry should track workflow state and status, rather than duplicate the complete metadata model. Future migrations should preserve finalized content IDs and reviewed corrections. This public prototype demonstrates the standalone metadata record and ID stability; it does not implement a registry or migration process.
-
-### Production design and public implementation
-
-The architecture above reflects the confirmed production design. The clean-room implementation is narrower: its runnable example processes one fictional podcast source, uses a small synthetic reference library, and deterministically writes Markdown documents plus one JSON record. The public demo is evidence of selected workflow contracts, not a copy of the production system, its source documents, code, templates, or publishing infrastructure.
-
-### Uncertainty and review
-
-The example notes suggest a body scan, but the synthetic transcript does not describe one. The pipeline does not silently adopt that suggestion. It keeps the factual output grounded in the primary source, marks the modality as `needs_review`, and explains the open question in metadata. Unavailable media URLs remain blank.
-
-### Where AI fits
-
-There is no live model call in this repository. The demo uses deterministic transformations so reviewers can reproduce every output offline and inspect each decision. A future summarizer, classifier, or recommender could plug into the interpretation stage, but its proposals would still need to satisfy the output contracts and validation checks. Model-generated text is not treated as verified source fact.
-
-## Run the synthetic demo
-
-Requires Python 3.11 or newer. Runtime dependencies are empty; the default workflow has no network access requirement and uses only fictional content.
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -e .
-content-ops-demo
-```
-
-Or run it without installing the command entry point:
-
-```powershell
-python -m content_operations.demo
-```
-
-Generated files are written to `generated_example/`. To choose another output folder:
-
-```powershell
-content-ops-demo --output-dir .\out
-```
-
-## Example run
+| Output | Who it's for | Sample |
+|---|---|---|
+| Public companion | Listeners: a small practice, not a summary | [public_companion.md](generated_example/public_companion.md) |
+| Deep guide | Listeners who want to go further | [deep_guide.md](generated_example/deep_guide.md) |
+| Publishing sheet | Me, on publish day: title, SEO, slug, copy blocks | [publishing_sheet.md](generated_example/publishing_sheet.md) |
+| Future library note | A future search/recommendation system | [future_optimization.md](generated_example/future_optimization.md) |
+| `metadata.json` | Software: stable ID, controlled tags, relationships | [metadata.json](generated_example/metadata.json) |
+| Validation report | Me: did everything check out? | [validation_report.txt](generated_example/validation_report.txt) |
 
 ```text
 Content ID: podcast_s01e001_learning_to_rest
@@ -112,31 +35,55 @@ Validation: PASS
 Generated 6 outputs in generated_example
 ```
 
-The metadata validator passes structural checks while retaining a review flag for the unresolved modality. A passing schema means the record is well-formed; it does not mean every editorial classification is final.
+## The rules that make it trustworthy
 
-## Tests
+**1. The recording outranks everything else.** Sources have a strict priority: transcript, then show notes, then templates, then everything else. Show notes can fill gaps, but they can't overrule what was actually said.
 
-Run after the editable install above.
+> In the demo, the show notes suggest a body-scan exercise, **but the transcript never describes one.** The pipeline doesn't adopt it. It flags the question for me instead: *"whether a somatic modality is central is unclear."* That's the exact mistake AI drafting makes, caught by a rule.
 
-```powershell
+**2. Missing stays missing.** The Spotify and YouTube links don't exist yet, so they're left blank and marked "add after confirming." The pipeline never fills them with a plausible-looking URL.
+
+**3. Every piece of content gets one permanent ID.** Titles change and URLs change, but `podcast_s01e001_learning_to_rest` doesn't. Every output and every cross-link uses the ID, so nothing breaks when I rename an episode.
+
+**4. Two kinds of tags.** A small fixed vocabulary (pathway, depth, practice type) lets software filter reliably. Free-form "listener language" tags ("peace feels unfamiliar") keep how people actually describe their problem.
+
+**5. "Valid" doesn't mean "done."** The metadata passes its structural checks *and* stays flagged for human review. Well-formed and correct are different questions.
+
+```mermaid
+flowchart LR
+    T[Transcript] --> N[Normalize + assign ID]
+    S[Show notes] -. fills gaps only .-> N
+    N --> X[Tag with fixed vocabulary]
+    L[Reference library] --> R[Suggest related content]
+    X --> R
+    R --> O[Six outputs]
+    O --> V{Validate}
+    V -->|uncertain| F[Flag for review]
+    V -->|ok| H[Ready for human review]
+    F --> H
+```
+
+## Where AI fits
+
+In my real workflow, an AI assistant does the drafting by following these rules as written instructions. This public version replaces that drafting step with fixed templates, so every output can be reproduced and tested offline. The rules, IDs, tags, and validation are the part worth showing, and they're what keep AI-written drafts honest no matter which model writes them.
+
+## Run it
+
+Python 3.11+, no dependencies.
+
+```bash
+python -m pip install -e .
+content-ops-demo                         # writes to generated_example/
+content-ops-demo --output-dir ./out
 python -m unittest discover -s tests -v
 ```
 
-Tests cover identity stability, source priority, vocabularies, uncertainty, link integrity, metadata validation, reference suggestions, shared output identity, and the end-to-end file set.
+Design notes: [architecture](docs/architecture.md) · [metadata design](docs/metadata-design.md) · [uncertainty and review](docs/uncertainty-and-review.md) · [how this relates to the real system](docs/source-review.md)
 
-## Repository map
+## Limits
 
-```text
-src/content_operations/   Source, identity, taxonomy, references, metadata, validation, workflow, CLI
-examples/                 Fictional transcript, notes, and reference library
-generated_example/        Six generated demo outputs
-docs/                     Architecture, source review, metadata, uncertainty, privacy boundary
-diagrams/                 Mermaid architecture source
-tests/                    Standard-library unittest suite
-```
+Everything here is fictional. It doesn't publish anything, check live URLs, or replace editorial judgment, and the guided resources are educational, not clinical.
 
-## Privacy and limitations
+---
 
-All runnable examples and generated outputs are synthetic. The repository contains no production transcripts, internal instructions, brand artwork, private links, or personal content. The prototype validates metadata shape and selected consistency rules; it does not implement a CMS, publish content, verify external URLs, provide access control, or guarantee source accuracy. It is not a production publishing system and makes no clinical claims.
-
-The public edition preserves the design concepts while replacing production content, naming, templates, and visual assets with fictional examples and generic layouts. See [privacy boundaries](docs/privacy-boundaries.md) and [production vs portfolio](docs/production-vs-portfolio.md).
+Built by [Michael Perry](https://perry.is). I designed the content system and its rules, then directed AI coding agents to implement this version and reviewed the result. [More of my work →](https://github.com/perry-is)

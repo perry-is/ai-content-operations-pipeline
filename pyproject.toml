@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "content-operations-pipeline"
 version = "0.1.0"
-description = "A clean-room prototype for structured, reviewable content operations."
+description = "Turns one long-form source into a validated publishing package with stable IDs and review flags"
 requires-python = ">=3.11"
 dependencies = []
 
