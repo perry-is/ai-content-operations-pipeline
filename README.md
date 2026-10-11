@@ -87,3 +87,7 @@ Everything here is fictional. It doesn't publish anything, check live URLs, or r
 ---
 
 Built by [Michael Perry](https://perry.is). I designed the content system and its rules, then directed AI coding agents to implement this version and reviewed the result. [More of my work →](https://github.com/perry-is)
+
+## License
+
+Copyright © 2026 Michael Perry. All rights reserved. This code is shared for portfolio review only and may not be copied, modified, or reused without written permission. See [LICENSE](LICENSE).
